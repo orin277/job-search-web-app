@@ -2,7 +2,7 @@ from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, declarative_base
 
-from job_search_web_app.core.config import settings
+from app.core.config import settings
 
 engine = create_async_engine(settings.db_url)
 

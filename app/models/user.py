@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from job_search_web_app.db.database import Base
+from app.db.database import Base
 
 if TYPE_CHECKING:
-    from job_search_web_app.models.user_type import UserType
+    from app.models.user_type import UserType
 
 
 

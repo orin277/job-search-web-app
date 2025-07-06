@@ -5,10 +5,10 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from job_search_web_app.core.config import settings
+from app.core.config import settings
 
-from job_search_web_app.db.database import Base
-import job_search_web_app.db.base
+from app.db.database import Base
+import app.db.base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
