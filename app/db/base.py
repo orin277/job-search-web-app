@@ -9,4 +9,4 @@ from app.models.education import Education
 from app.models.eployment_type import EmploymentType
 from app.models.professional_field import ProfessionalField
 from app.models.resume import Resume
-
+from app.models.candidate_skill import CandidateSkill
