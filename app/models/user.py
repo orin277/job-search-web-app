@@ -5,6 +5,7 @@ from app.db.database import Base
 
 if TYPE_CHECKING:
     from app.models.user_type import UserType
+from app.models.applicant import Applicant
 
 
 
@@ -18,4 +19,6 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String(60), nullable=False)
     name: Mapped[str] = mapped_column(String(30), nullable=False)
     surname: Mapped[str] = mapped_column(String(40), nullable=False)
+
     user_type: Mapped["UserType"] = relationship("UserType", back_populates="users")
+    applicant: Mapped[Applicant | None] = relationship("Applicant", back_populates="user")
