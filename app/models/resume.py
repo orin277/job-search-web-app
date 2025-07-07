@@ -4,12 +4,13 @@ from sqlalchemy import Column, Date, ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 from app.models.candidate_skill import CandidateSkill
-from app.models.education import Education
+
 from app.models.eployment_type import EmploymentType
 from app.models.professional_field import ProfessionalField
 
 if TYPE_CHECKING:
     from app.models.applicant import Applicant
+    from app.models.education import Education
 
 
 class Resume(Base):
@@ -25,3 +26,4 @@ class Resume(Base):
 
     applicant: Mapped["Applicant"] = relationship("Applicant", back_populates="resumes")
     candidate_skills: Mapped[List["CandidateSkill"]] = relationship("CandidateSkill", back_populates="resume")
+    education: Mapped[List["Education"]] = relationship("Education", back_populates="resume")

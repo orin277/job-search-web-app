@@ -13,4 +13,4 @@ class EducationLevel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
 
-    educations: Mapped[List["Education"]] = relationship("Education", back_populates="education_level")
+    education: Mapped[List["Education"]] = relationship("Education", back_populates="education_level")
