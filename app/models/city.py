@@ -16,3 +16,4 @@ class City(Base):
     name: Mapped[str] = mapped_column(String(50), nullable=False)
 
     region: Mapped["Region"] = relationship("Region", back_populates="cities")
+    users: Mapped[List["User"]] = relationship("User", back_populates="city")
