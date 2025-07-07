@@ -7,4 +7,4 @@ from app.models.city import City
 from app.models.education_level import EducationLevel
 from app.models.education import Education
 from app.models.eployment_type import EmploymentType
-
+from app.models.professional_field import ProfessionalField
