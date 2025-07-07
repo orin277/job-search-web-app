@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 from app.models.candidate_skill import CandidateSkill
 
-from app.models import resume_employment_type, resume_professional_field, resume_work_location_type
+from app.models import resume_city, resume_employment_type, resume_professional_field, resume_work_location_type
 
 if TYPE_CHECKING:
     from app.models.applicant import Applicant
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from app.models.employment_type import EmploymentType
     from app.models.work_location_type import WorkLocationType
     from app.models.professional_field import ProfessionalField
-
+    from app.models.city import City
 
 
 class Resume(Base):
@@ -46,5 +46,11 @@ class Resume(Base):
     professional_fields: Mapped[List["ProfessionalField"]] = relationship(
         "ProfessionalField",
         secondary=resume_professional_field,
+        back_populates="resumes"
+    )
+
+    cities: Mapped[List["City"]] = relationship(
+        "City",
+        secondary=resume_city,
         back_populates="resumes"
     )
