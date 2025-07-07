@@ -6,12 +6,13 @@ from app.db.database import Base
 from app.models.candidate_skill import CandidateSkill
 
 from app.models.professional_field import ProfessionalField
-from app.models import resume_employment_type
+from app.models import resume_employment_type, resume_work_location_type
 
 if TYPE_CHECKING:
     from app.models.applicant import Applicant
     from app.models.education import Education
     from app.models.employment_type import EmploymentType
+    from app.models.work_location_type import WorkLocationType
 
 
 
@@ -33,5 +34,11 @@ class Resume(Base):
     employment_types: Mapped[List["EmploymentType"]] = relationship(
         "EmploymentType",
         secondary=resume_employment_type,
+        back_populates="resumes"
+    )
+
+    work_location_types: Mapped[List["WorkLocationType"]] = relationship(
+        "WorkLocationType",
+        secondary=resume_work_location_type,
         back_populates="resumes"
     )
