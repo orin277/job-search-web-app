@@ -2,11 +2,10 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.models.resume import Resume
 
 if TYPE_CHECKING:
     from app.models.user import User
-
+    from app.models.resume import Resume
 
 
 class Applicant(Base):

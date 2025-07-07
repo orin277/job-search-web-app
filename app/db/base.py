@@ -6,8 +6,9 @@ from app.models.region import Region
 from app.models.city import City
 from app.models.education_level import EducationLevel
 from app.models.education import Education
-from app.models.eployment_type import EmploymentType
+from app.models.employment_type import EmploymentType
 from app.models.professional_field import ProfessionalField
 from app.models.resume import Resume
 from app.models.candidate_skill import CandidateSkill
 from app.models.work_experience import WorkExperience
+from app.models.resume_employment_type import resume_employment_type
