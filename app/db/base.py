@@ -14,3 +14,4 @@ from app.models.work_experience import WorkExperience
 from app.models.resume_employment_type import resume_employment_type
 from app.models.work_location_type import WorkLocationType
 from app.models.resume_work_location_type import resume_work_location_type
+from app.models.resume_professional_field import resume_professional_field

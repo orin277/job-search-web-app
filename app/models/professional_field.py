@@ -2,7 +2,11 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.models.work_experience import WorkExperience
+from app.models import resume_professional_field
+
+if TYPE_CHECKING:
+    from app.models.work_experience import WorkExperience
+    from app.models.resume import Resume
 
 
 class ProfessionalField(Base):
@@ -12,3 +16,9 @@ class ProfessionalField(Base):
     name: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
 
     work_experience: Mapped[List["WorkExperience"]] = relationship("WorkExperience", back_populates="professional_field")
+
+    resumes: Mapped[List["Resume"]] = relationship(
+        "Resume",
+        secondary=resume_professional_field,
+        back_populates="professional_fields"
+    )

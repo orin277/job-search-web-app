@@ -5,14 +5,14 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 from app.models.candidate_skill import CandidateSkill
 
-from app.models.professional_field import ProfessionalField
-from app.models import resume_employment_type, resume_work_location_type
+from app.models import resume_employment_type, resume_professional_field, resume_work_location_type
 
 if TYPE_CHECKING:
     from app.models.applicant import Applicant
     from app.models.education import Education
     from app.models.employment_type import EmploymentType
     from app.models.work_location_type import WorkLocationType
+    from app.models.professional_field import ProfessionalField
 
 
 
@@ -40,5 +40,11 @@ class Resume(Base):
     work_location_types: Mapped[List["WorkLocationType"]] = relationship(
         "WorkLocationType",
         secondary=resume_work_location_type,
+        back_populates="resumes"
+    )
+
+    professional_fields: Mapped[List["ProfessionalField"]] = relationship(
+        "ProfessionalField",
+        secondary=resume_professional_field,
         back_populates="resumes"
     )
