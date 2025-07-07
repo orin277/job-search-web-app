@@ -1,12 +1,11 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 
 if TYPE_CHECKING:
-    from app.models.user_type import UserType
+    from app.models.vacancy import Vacancy
     from app.models.professional_field import ProfessionalField
-from app.models.applicant import Applicant
 from app.models.city import City
 
 
@@ -23,3 +22,4 @@ class Company(Base):
 
     city: Mapped["City"] = relationship("City", back_populates="companies")
     professional_field: Mapped["ProfessionalField"] = relationship("ProfessionalField", back_populates="companies")
+    vacancies: Mapped[List["Vacancy"]] = relationship("Vacancy", back_populates="company")
