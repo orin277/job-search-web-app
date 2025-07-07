@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from app.models.region import Region
     from app.models.work_experience import WorkExperience
     from app.models.resume import Resume
+    from app.models.company import Company
 
 
 class City(Base):
@@ -21,6 +22,7 @@ class City(Base):
     region: Mapped["Region"] = relationship("Region", back_populates="cities")
     users: Mapped[List["User"]] = relationship("User", back_populates="city")
     work_experience: Mapped[List["WorkExperience"]] = relationship("WorkExperience", back_populates="city")
+    companies: Mapped[List["Company"]] = relationship("Company", back_populates="city")
 
     resumes: Mapped[List["Resume"]] = relationship(
         "Resume",

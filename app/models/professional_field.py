@@ -7,6 +7,7 @@ from app.models import resume_professional_field
 if TYPE_CHECKING:
     from app.models.work_experience import WorkExperience
     from app.models.resume import Resume
+    from app.models.company import Company
 
 
 class ProfessionalField(Base):
@@ -16,6 +17,7 @@ class ProfessionalField(Base):
     name: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
 
     work_experience: Mapped[List["WorkExperience"]] = relationship("WorkExperience", back_populates="professional_field")
+    companies: Mapped[List["Company"]] = relationship("Company", back_populates="professional_field")
 
     resumes: Mapped[List["Resume"]] = relationship(
         "Resume",
