@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.models import resume_city
+from app.models import resume_city, vacancy_city
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from app.models.work_experience import WorkExperience
     from app.models.resume import Resume
     from app.models.company import Company
+    from app.models.vacancy import Vacancy
 
 
 class City(Base):
@@ -27,5 +28,11 @@ class City(Base):
     resumes: Mapped[List["Resume"]] = relationship(
         "Resume",
         secondary=resume_city,
+        back_populates="cities"
+    )
+
+    vacancies: Mapped[List["Vacancy"]] = relationship(
+        "Vacancy",
+        secondary=vacancy_city,
         back_populates="cities"
     )

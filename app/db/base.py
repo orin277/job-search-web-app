@@ -24,3 +24,4 @@ from app.models.response import Response
 from app.models.vacancy_employment_type import vacancy_employment_type
 from app.models.vacancy_work_location_type import vacancy_work_location_type
 from app.models.vacancy_professional_field import vacancy_professional_field
+from app.models.vacancy_city import vacancy_city
