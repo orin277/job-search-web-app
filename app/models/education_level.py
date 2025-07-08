@@ -5,6 +5,7 @@ from app.db.database import Base
 
 if TYPE_CHECKING:
     from app.models.education import Education
+    from app.models.vacancy import Vacancy
 
 
 class EducationLevel(Base):
@@ -14,3 +15,4 @@ class EducationLevel(Base):
     name: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
 
     education: Mapped[List["Education"]] = relationship("Education", back_populates="education_level")
+    vacancies: Mapped[List["Vacancy"]] = relationship("Vacancy", back_populates="education_level")

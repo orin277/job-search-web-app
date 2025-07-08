@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from app.models.work_location_type import WorkLocationType
     from app.models.professional_field import ProfessionalField
     from app.models.city import City
+from app.models.education_level import EducationLevel
 
 
 class Vacancy(Base):
@@ -22,6 +23,7 @@ class Vacancy(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     employer_id: Mapped[int] = mapped_column(ForeignKey("employers.id"))
     company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"))
+    education_level_id: Mapped[int] = mapped_column(ForeignKey("education_levels.id"), nullable=True)
 
     position: Mapped[str] = mapped_column(String(60), nullable=False)
     min_salary: Mapped[int] = mapped_column(Integer(), nullable=True)
@@ -34,6 +36,7 @@ class Vacancy(Base):
     employer: Mapped["Employer"] = relationship("Employer", back_populates="vacancies")
     company: Mapped["Company"] = relationship("Company", back_populates="vacancies")
     responses: Mapped[List["Response"]] = relationship("Response", back_populates="vacancy")
+    education_level: Mapped[EducationLevel | None] = relationship("EducationLevel", back_populates="vacancies")
 
     employment_types: Mapped[List["EmploymentType"]] = relationship(
         "EmploymentType",
