@@ -21,3 +21,5 @@ from app.models.employer import Employer
 from app.models.vacancy import Vacancy
 from app.models.response_status import ResponseStatus
 from app.models.response import Response
+from app.models.vacancy_employment_type import vacancy_employment_type
+from app.models.vacancy_work_location_type import vacancy_work_location_type
