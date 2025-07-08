@@ -8,8 +8,8 @@ from app.db.database import Base
 if TYPE_CHECKING:
     from app.models.employer import Employer
     from app.models.company import Company
+    from app.models.response import Response
 
-    from app.models.city import City
 
 
 class Vacancy(Base):
@@ -29,3 +29,4 @@ class Vacancy(Base):
 
     employer: Mapped["Employer"] = relationship("Employer", back_populates="vacancies")
     company: Mapped["Company"] = relationship("Company", back_populates="vacancies")
+    responses: Mapped[List["Response"]] = relationship("Response", back_populates="vacancy")

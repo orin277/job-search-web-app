@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from app.models.work_location_type import WorkLocationType
     from app.models.professional_field import ProfessionalField
     from app.models.city import City
+    from app.models.response import Response
 
 
 class Resume(Base):
@@ -30,6 +31,7 @@ class Resume(Base):
     applicant: Mapped["Applicant"] = relationship("Applicant", back_populates="resumes")
     candidate_skills: Mapped[List["CandidateSkill"]] = relationship("CandidateSkill", back_populates="resume")
     education: Mapped[List["Education"]] = relationship("Education", back_populates="resume")
+    responses: Mapped[List["Response"]] = relationship("Response", back_populates="resume")
 
     employment_types: Mapped[List["EmploymentType"]] = relationship(
         "EmploymentType",
