@@ -3,13 +3,14 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import Boolean, Column, Date, ForeignKey, String, Integer, SmallInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
+from app.models import vacancy_employment_type
 
 
 if TYPE_CHECKING:
     from app.models.employer import Employer
     from app.models.company import Company
     from app.models.response import Response
-
+    from app.models.employment_type import EmploymentType
 
 
 class Vacancy(Base):
@@ -30,3 +31,9 @@ class Vacancy(Base):
     employer: Mapped["Employer"] = relationship("Employer", back_populates="vacancies")
     company: Mapped["Company"] = relationship("Company", back_populates="vacancies")
     responses: Mapped[List["Response"]] = relationship("Response", back_populates="vacancy")
+
+    employment_types: Mapped[List["EmploymentType"]] = relationship(
+        "EmploymentType",
+        secondary=vacancy_employment_type,
+        back_populates="vacancies"
+    )
