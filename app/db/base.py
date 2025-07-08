@@ -19,3 +19,4 @@ from app.models.resume_city import resume_city
 from app.models.company import Company
 from app.models.employer import Employer
 from app.models.vacancy import Vacancy
+from app.models.response_status import ResponseStatus
