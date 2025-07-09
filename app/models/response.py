@@ -6,9 +6,9 @@ from app.db.database import Base
 
 
 if TYPE_CHECKING:
-    from app.models.response_status import ResponseStatus
     from app.models.resume import Resume
     from app.models.vacancy import Vacancy
+    from app.models.response_status import ResponseStatus
 
 
 class Response(Base):

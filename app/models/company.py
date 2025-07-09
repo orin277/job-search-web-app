@@ -6,7 +6,7 @@ from app.db.database import Base
 if TYPE_CHECKING:
     from app.models.vacancy import Vacancy
     from app.models.professional_field import ProfessionalField
-from app.models.city import City
+    from app.models.city import City
 
 
 class Company(Base):

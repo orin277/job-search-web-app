@@ -3,11 +3,12 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, Date, ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.models.city import City
 
 if TYPE_CHECKING:
     from app.models.resume import Resume
     from app.models.professional_field import ProfessionalField
+    from app.models.city import City
+
 
 
 class WorkExperience(Base):

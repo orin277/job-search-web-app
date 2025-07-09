@@ -2,7 +2,9 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.models import resume_employment_type, vacancy_employment_type
+from app.models.resume_employment_type import resume_employment_type
+from app.models.vacancy_employment_type import vacancy_employment_type
+
 
 if TYPE_CHECKING:
     from app.models.resume import Resume

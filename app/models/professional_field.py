@@ -2,13 +2,15 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.models import resume_professional_field, vacancy_professional_field
-from app.models.vacancy import Vacancy
+from app.models.resume_professional_field import resume_professional_field
+from app.models.vacancy_professional_field import vacancy_professional_field
+
 
 if TYPE_CHECKING:
     from app.models.work_experience import WorkExperience
     from app.models.resume import Resume
     from app.models.company import Company
+    from app.models.vacancy import Vacancy
 
 
 class ProfessionalField(Base):

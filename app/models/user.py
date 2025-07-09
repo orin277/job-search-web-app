@@ -5,9 +5,9 @@ from app.db.database import Base
 
 if TYPE_CHECKING:
     from app.models.user_type import UserType
-from app.models.applicant import Applicant
-from app.models.employer import Employer
-from app.models.city import City
+    from app.models.applicant import Applicant
+    from app.models.employer import Employer
+    from app.models.city import City
 
 
 class User(Base):
@@ -24,5 +24,5 @@ class User(Base):
 
     user_type: Mapped["UserType"] = relationship("UserType", back_populates="users")
     city: Mapped["City"] = relationship("City", back_populates="users")
-    applicant: Mapped[Applicant | None] = relationship("Applicant", back_populates="user")
-    employer: Mapped[Employer | None] = relationship("Employer", back_populates="user")
+    applicant: Mapped["Applicant | None"] = relationship("Applicant", back_populates="user")
+    employer: Mapped["Employer | None"] = relationship("Employer", back_populates="user")

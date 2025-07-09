@@ -2,15 +2,17 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.models import resume_city, vacancy_city
+from app.models.resume_city import resume_city
+from app.models.vacancy_city import vacancy_city
+
 
 if TYPE_CHECKING:
     from app.models.user import User
+    from app.models.resume import Resume
+    from app.models.vacancy import Vacancy
     from app.models.region import Region
     from app.models.work_experience import WorkExperience
-    from app.models.resume import Resume
     from app.models.company import Company
-    from app.models.vacancy import Vacancy
 
 
 class City(Base):
