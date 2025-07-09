@@ -14,7 +14,7 @@ class Education(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     education_level_id: Mapped[int] = mapped_column(ForeignKey("education_levels.id"))
-    resume_id: Mapped[int] = mapped_column(ForeignKey("education_levels.id"))
+    resume_id: Mapped[int] = mapped_column(ForeignKey("resumes.id"))
     institution: Mapped[str] = mapped_column(String(120), nullable=False)
     graduation_year: Mapped[date] = mapped_column(Date(), nullable=False)
     specialty_name: Mapped[str] = mapped_column(String(140), nullable=False)

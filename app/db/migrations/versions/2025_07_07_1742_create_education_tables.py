@@ -36,7 +36,7 @@ def upgrade() -> None:
     sa.Column('graduation_year', sa.Date(), nullable=False),
     sa.Column('specialty_name', sa.String(length=140), nullable=False),
     sa.ForeignKeyConstraint(['education_level_id'], ['education_levels.id'], name=op.f('fk_education_education_level_id_education_levels')),
-    sa.ForeignKeyConstraint(['resume_id'], ['education_levels.id'], name=op.f('fk_education_resume_id_education_levels')),
+    sa.ForeignKeyConstraint(['resume_id'], ['resumes.id'], name=op.f('fk_education_resume_id_resumes')),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_education'))
     )
     op.create_index(op.f('ix_education_id'), 'education', ['id'], unique=False)
