@@ -32,6 +32,7 @@ class AuthSettings(BaseSettings):
 class Settings(BaseSettings):
     db: DatabaseSettings = Field(default_factory=DatabaseSettings)
     auth: AuthSettings = Field(default_factory=AuthSettings)
+    GEMINI_API_KEY: str
 
     model_config = SettingsConfigDict(
         env_file='.env', 
