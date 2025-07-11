@@ -5,7 +5,8 @@ The platform allows interaction between applicants and employers, enabling featu
 
 ## Technology stack
 
-- Backend: FastAPI
-- Database: PostgreSQL + SQLAlchemy
-- Database for session: Redis
-- AI Integration: Gemini 
+- FastAPI: Backend framework
+- SQLAlchemy: ORM for database interactions
+- PostgreSQL: Main database
+- Redis: Caching and session storage
+- Gemini API: Interview simulation
