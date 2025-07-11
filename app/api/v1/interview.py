@@ -14,14 +14,14 @@ router = APIRouter(
 
 @router.post("/interviews/start")
 async def start_interview(
-    request: Annotated[InterviewRequest, Depends()], 
+    request: InterviewRequest, 
     interview_service: InterviewService = Depends(get_interview_service)
 ) -> InterviewResponse:
     return await interview_service.start_interview(request)
 
 @router.post("/interviews/answer")
 async def submit_answer(
-    answer_request: Annotated[CandidateAnswer, Depends()], 
+    answer_request: CandidateAnswer, 
     interview_service: InterviewService = Depends(get_interview_service)
 ) -> InterviewResponse:
     return await interview_service.get_next_question(answer_request)
@@ -40,5 +40,5 @@ async def cancel_interview(
     session_id: str,
     interview_service: InterviewService = Depends(get_interview_service)
 ) -> dict:
-    interview_service.cancel_interview(session_id)
+    await interview_service.cancel_interview(session_id)
     return {"message": "cancel", "session_id": session_id}

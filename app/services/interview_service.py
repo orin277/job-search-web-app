@@ -5,16 +5,16 @@ import uuid
 from google import genai
 from google.genai import types
 
+from app.repositories.interview_repo import InterviewRepository
 from app.schemas.interview import CandidateAnswer, InterviewFeedback, InterviewRequest, InterviewResponse, InterviewSession
 
 from app.core.config import settings
 from app.utils.interview import get_feedback_prompt, get_response_from_json, get_system_prompt
 
 
-interview_sessions: Dict[str, InterviewSession] = {}
-
 class InterviewService:
-    def __init__(self):
+    def __init__(self, interview_repo: InterviewRepository):
+        self.interview_repo = interview_repo
         self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
         self.model = "gemini-2.5-flash"
     
@@ -50,11 +50,11 @@ class InterviewService:
 
         interview_session.conversation_history.append({"role": "user", "parts": [{"text": "Добрий день! Давайте почнемо співбесіду"}]})
 
-        interview_sessions[session_id] = interview_session
-
         interviewer_message = await self._get_answer(system_prompt, interview_session.conversation_history)
         
         interview_session.conversation_history.append({"role": "model", "parts": [{"text": interviewer_message.text}]})
+
+        await self.interview_repo.save(session_id, interview_session)
         
         response = InterviewResponse(
             session_id = session_id,
@@ -64,40 +64,40 @@ class InterviewService:
         return response
 
     async def get_next_question(self, candidate_answer: CandidateAnswer) -> InterviewResponse:
-        session_id = candidate_answer.session_id
-        if session_id in interview_sessions:
-            interview_sessions[session_id].conversation_history.append({"role": "user", "parts": [{"text": candidate_answer.answer}]})
+        interview_session = await self.interview_repo.get(candidate_answer.session_id)
+        if interview_session is not None:
+            interview_session.conversation_history.append({"role": "user", "parts": [{"text": candidate_answer.answer}]})
 
-            system_prompt = get_system_prompt(interview_sessions[session_id].position, 
-                                                    interview_sessions[session_id].specific_topics, 
-                                                    interview_sessions[session_id].resume, 
-                                                    interview_sessions[session_id].vacancy)
+            system_prompt = get_system_prompt(interview_session.position, 
+                                                    interview_session.specific_topics, 
+                                                    interview_session.resume, 
+                                                    interview_session.vacancy)
 
-            interviewer_message = await self._get_answer(system_prompt, interview_sessions[candidate_answer.session_id].conversation_history)
+            interviewer_message = await self._get_answer(system_prompt, interview_session.conversation_history)
             
-            interview_sessions[session_id].conversation_history.append({"role": "model", "parts": [{"text": interviewer_message.text}]})
+            interview_session.conversation_history.append({"role": "model", "parts": [{"text": interviewer_message.text}]})
 
-            interview_sessions[session_id].current_question += 1
+            interview_session.current_question += 1
 
-            interview_status = "active"
-            if interview_sessions[session_id].current_question > interview_sessions[session_id].total_questions:
-                interview_status = "end"
+            if interview_session.current_question > interview_session.total_questions:
+                interview_session.status = "end"
+
+            await self.interview_repo.save(candidate_answer.session_id, interview_session)
             
             response = InterviewResponse(
-                session_id = session_id,
+                session_id = candidate_answer.session_id,
                 interviewer_message = interviewer_message.text,
-                interview_status = interview_status
+                interview_status = interview_session.status
             )
             return response
         else:
             raise Exception()
 
     async def get_final_feedback(self, session_id: str) -> InterviewFeedback:
-        if session_id not in interview_sessions:
+        session = await self.interview_repo.get(session_id)
+        if session is None:
             raise Exception()
         
-        session = interview_sessions[session_id]
-
         session.conversation_history.append({"role": "user", "parts": [{"text": get_feedback_prompt()}]})
 
         system_prompt = get_system_prompt(session.position, 
@@ -112,7 +112,8 @@ class InterviewService:
             **feedback_data
         )
     
-    def cancel_interview(self, session_id: str):
-        if session_id in interview_sessions:
-            interview_sessions.pop(session_id)
-        return
+    async def cancel_interview(self, session_id: str):
+        session = await self.interview_repo.get(session_id)
+        if session is not None:
+            await self.interview_repo.delete(session_id)
+        return None

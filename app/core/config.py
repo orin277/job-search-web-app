@@ -16,6 +16,19 @@ class DatabaseSettings(BaseSettings):
         extra="ignore",
     )
 
+class RedisSettings(BaseSettings):
+    HOST: str
+    PORT: int
+    DB: int
+    PASSWORD: str
+
+    model_config = SettingsConfigDict(
+        env_prefix="REDIS_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
 
 class AuthSettings(BaseSettings):
     secret_key: str
@@ -31,6 +44,7 @@ class AuthSettings(BaseSettings):
 
 class Settings(BaseSettings):
     db: DatabaseSettings = Field(default_factory=DatabaseSettings)
+    redis: RedisSettings = Field(default_factory=RedisSettings)
     auth: AuthSettings = Field(default_factory=AuthSettings)
     GEMINI_API_KEY: str
 
@@ -42,6 +56,10 @@ class Settings(BaseSettings):
     @property
     def db_url(self):
         return f"postgresql+asyncpg://{self.db.user}:{self.db.password}@{self.db.host}:{self.db.port}/{self.db.name}"
+    
+    @property
+    def redis_db_url(self):
+        return f"redis://:{self.redis.PASSWORD}@{self.redis.HOST}:{self.redis.PORT}/{self.redis.DB}"
     
     @property
     def auth_data(self):

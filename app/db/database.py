@@ -1,6 +1,9 @@
+from fastapi import Request
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, declarative_base
+
+import redis.asyncio as redis
 
 from app.core.config import settings
 
@@ -14,6 +17,18 @@ def get_db_connection():
         yield db
     finally:
         db.close()
+
+async def get_redis_client():
+    redis_client = redis.from_url(settings.redis_db_url)
+    try:
+        await redis_client.ping()
+        print("Redis is connected")
+    except Exception as e:
+        print(f"Redis is not connected {e}")
+    return redis_client
+
+async def get_redis_db(request: Request):
+    return request.app.state.redis_client
 
 
 class Base(DeclarativeBase):
