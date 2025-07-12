@@ -22,7 +22,7 @@ async def get_applicants(
 
 @router.post("")
 async def create_applicant(
-    applicant_data: Annotated[ApplicantCreate, Depends()],
+    applicant_data: ApplicantCreate,
     applicant_service: ApplicantService = Depends(get_applicant_service)
 ) -> ApplicantRead:
     applicant = await applicant_service.create(applicant_data)
@@ -31,7 +31,7 @@ async def create_applicant(
 
 @router.patch("/{id}")
 async def update_applicant(
-    applicant_data: Annotated[ApplicantEdit, Depends()],
+    applicant_data: ApplicantEdit,
     applicant_service: ApplicantService = Depends(get_applicant_service)
 ) -> ApplicantRead:
     applicant = await applicant_service.update(applicant_data)

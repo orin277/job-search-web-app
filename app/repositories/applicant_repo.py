@@ -1,9 +1,10 @@
 from typing import Protocol, List
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, contains_eager
 
 from app.models.applicant import Applicant
+from app.models.user import User
 
 class ApplicantRepository(Protocol):
     async def create(self, applicant: Applicant) -> Applicant:
@@ -41,7 +42,6 @@ class SqlAlchemyApplicantRepository:
     async def update(self, applicant: Applicant) -> Applicant:
         await self.session.commit()
         await self.session.refresh(applicant)
-
         return applicant
     
     async def delete(self, applicant: Applicant) -> None:
@@ -51,18 +51,29 @@ class SqlAlchemyApplicantRepository:
     async def get_all(
         self,
         name: str | None,
-        surname: str | None
+        surname: str | None,
+        city_id: int | None
     ) -> List[Applicant]:
-        query = select(Applicant).options(joinedload(Applicant.user))
+        query = (
+            select(Applicant)
+            .join(User)
+            .options(contains_eager(Applicant.user)
+                     .load_only(User.id, User.user_type_id, User.name, 
+                                User.surname, User.city_id, User.email, User.phone)
+                     )
+            )
         if name:
-            query = query.filter(Applicant.user.name == name)
+            query = query.filter(User.name.ilike(f'%{name}%'))
         if surname:
-            query = query.filter(Applicant.user.surname == surname)
+            query = query.filter(User.surname == surname)
+        if city_id:
+            query = query.filter(User.city_id == city_id)
 
         result = await self.session.execute(query)
         return result.scalars().all()
     
     async def get_by_id(self, id: int) -> Applicant | None:
         query = select(Applicant).options(joinedload(Applicant.user)).filter(Applicant.id==id)
+        
         result = await self.session.execute(query)
         return result.scalar_one_or_none()

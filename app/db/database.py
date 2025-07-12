@@ -11,12 +11,12 @@ engine = create_async_engine(settings.db_url)
 
 async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-def get_db_connection():
+async def get_db_connection():
     db = async_session_maker()
     try:
         yield db
     finally:
-        db.close()
+        await db.close()
 
 async def get_redis_client():
     redis_client = redis.from_url(settings.redis_db_url)

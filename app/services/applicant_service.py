@@ -1,5 +1,6 @@
 from typing import List
 
+from app.exceptions.applicant import ApplicantNotFoundException
 from app.models.applicant import Applicant
 from app.models.user import User
 from app.repositories.applicant_repo import ApplicantRepository
@@ -30,20 +31,27 @@ class ApplicantService:
     
     async def update(self, applicant_data: ApplicantEdit) -> ApplicantRead:
         applicant = await self.applicant_repo.get_by_id(applicant_data.id)
+        if applicant:
+            if applicant_data.user:
+                for field, value in applicant_data.user.model_dump(exclude_unset=True).items():
+                    setattr(applicant.user, field, value)
 
-        applicant.user.name = applicant_data.name
-        applicant.user.surname = applicant_data.surname
-        applicant.user.email = applicant_data.email
-        applicant.user.hashed_password = applicant_data.hashed_password
+            for field, value in applicant_data.model_dump(exclude={"user"}, exclude_unset=True).items():
+                setattr(applicant, field, value)
+        else:
+            raise ApplicantNotFoundException(applicant_data.id)
 
         applicant = await self.applicant_repo.update(applicant)
         return ApplicantRead.model_validate(applicant)
     
     async def delete(self, id: int) -> None:
         applicant = await self.applicant_repo.get_by_id(id)
-        await self.applicant_repo.delete(applicant)
+        if applicant:
+            await self.applicant_repo.delete(applicant)
+        else:
+            raise ApplicantNotFoundException(id)
 
     async def gel_all(self, filter: ApplicantFilter) -> List[ApplicantRead]:
-        applicant_models = await self.applicant_repo.get_all(filter.name, filter.surname)
+        applicant_models = await self.applicant_repo.get_all(filter.name, filter.surname, filter.city_id)
         return [ApplicantRead.model_validate(model) for model in applicant_models]
     
