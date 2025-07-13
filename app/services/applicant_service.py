@@ -1,6 +1,7 @@
 from typing import List
 
-from app.exceptions.applicant import ApplicantNotFoundException
+from app.exceptions.applicant import ApplicantNotFoundException, EmailAlreadyExistsException
+from app.exceptions.exceptions import UniqueConstraintException
 from app.models.applicant import Applicant
 from app.models.user import User
 from app.repositories.applicant_repo import ApplicantRepository
@@ -25,9 +26,12 @@ class ApplicantService:
         applicant = Applicant(
             user=user  
         )
-
-        applicant = await self.applicant_repo.create(applicant)
-        return ApplicantRead.model_validate(applicant)
+        try:
+            applicant = await self.applicant_repo.create(applicant)
+            return ApplicantRead.model_validate(applicant)
+        except UniqueConstraintException as e:
+            raise EmailAlreadyExistsException(e.field)
+        
     
     async def update(self, applicant_data: ApplicantEdit) -> ApplicantRead:
         applicant = await self.applicant_repo.get_by_id(applicant_data.id)
@@ -40,9 +44,13 @@ class ApplicantService:
                 setattr(applicant, field, value)
         else:
             raise ApplicantNotFoundException(applicant_data.id)
-
-        applicant = await self.applicant_repo.update(applicant)
-        return ApplicantRead.model_validate(applicant)
+        
+        try:
+            applicant = await self.applicant_repo.update(applicant)
+            return ApplicantRead.model_validate(applicant)
+        except UniqueConstraintException as e:
+            raise EmailAlreadyExistsException(e.field)
+        
     
     async def delete(self, id: int) -> None:
         applicant = await self.applicant_repo.get_by_id(id)

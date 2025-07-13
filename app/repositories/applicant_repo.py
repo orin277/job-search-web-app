@@ -1,8 +1,10 @@
 from typing import Protocol, List
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload, contains_eager
 
+from app.exceptions.exceptions import UniqueConstraintException
 from app.models.applicant import Applicant
 from app.models.user import User
 
@@ -35,17 +37,28 @@ class SqlAlchemyApplicantRepository:
         self.session = session
 
     async def create(self, applicant: Applicant) -> Applicant:
-        self.session.add(applicant)
+        try:
+            self.session.add(applicant)
+            await self.session.commit()
+            await self.session.refresh(applicant)
+            return applicant
+        except IntegrityError as e:
+            await self.session.rollback()
+            if "UNIQUE" in str(e.orig).upper():
+                raise UniqueConstraintException("email") from e
+            raise
 
-        await self.session.commit()
-        await self.session.refresh(applicant)
-        
-        return applicant
     
     async def update(self, applicant: Applicant) -> Applicant:
-        await self.session.commit()
-        await self.session.refresh(applicant)
-        return applicant
+        try:
+            await self.session.commit()
+            await self.session.refresh(applicant)
+            return applicant
+        except IntegrityError as e:
+            await self.session.rollback()
+            if "UNIQUE" in str(e.orig).upper():
+                raise UniqueConstraintException("email") from e
+            raise
     
     async def delete(self, applicant: Applicant) -> None:
         await self.session.delete(applicant)
