@@ -52,6 +52,9 @@ class ApplicantService:
             raise ApplicantNotFoundException(id)
 
     async def gel_all(self, filter: ApplicantFilter) -> List[ApplicantRead]:
-        applicant_models = await self.applicant_repo.get_all(filter.name, filter.surname, filter.city_id)
+        applicant_models = await self.applicant_repo.get_all(filter.name, filter.surname, 
+                                                             filter.email, filter.phone, 
+                                                             filter.city_id,
+                                                             filter.offset, filter.limit)
         return [ApplicantRead.model_validate(model) for model in applicant_models]
     

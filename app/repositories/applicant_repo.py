@@ -19,7 +19,10 @@ class ApplicantRepository(Protocol):
     async def get_all(
         self, 
         name: str | None,
-        surname: str | None
+        surname: str | None,
+        email: str | None,
+        phone: str | None,
+        city_id: int | None
     ) -> List[Applicant]:
         ...
 
@@ -52,7 +55,11 @@ class SqlAlchemyApplicantRepository:
         self,
         name: str | None,
         surname: str | None,
-        city_id: int | None
+        email: str | None,
+        phone: str | None,
+        city_id: int | None,
+        offset: int | None,
+        limit: int | None
     ) -> List[Applicant]:
         query = (
             select(Applicant)
@@ -65,15 +72,24 @@ class SqlAlchemyApplicantRepository:
         if name:
             query = query.filter(User.name.ilike(f'%{name}%'))
         if surname:
-            query = query.filter(User.surname == surname)
+            query = query.filter(User.surname.ilike(f'%{surname}%'))
         if city_id:
             query = query.filter(User.city_id == city_id)
+        if email:
+            query = query.filter(User.email.ilike(f'%{email}%'))
+        if phone:
+            query = query.filter(User.phone.ilike(f'%{phone}%'))
 
+        query = query.offset(offset).limit(limit)
         result = await self.session.execute(query)
         return result.scalars().all()
     
     async def get_by_id(self, id: int) -> Applicant | None:
-        query = select(Applicant).options(joinedload(Applicant.user)).filter(Applicant.id==id)
+        query = (
+            select(Applicant)
+            .options(joinedload(Applicant.user))
+            .filter(Applicant.id==id)
+        )
         
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
