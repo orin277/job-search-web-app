@@ -31,9 +31,9 @@ class RedisSettings(BaseSettings):
 
 
 class AuthSettings(BaseSettings):
-    secret_key: str
-    algorithm: str
-    access_token_expire_minutes: int
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
     
     model_config = SettingsConfigDict(
         env_prefix="AUTH_",
@@ -63,9 +63,9 @@ class Settings(BaseSettings):
     
     @property
     def auth_data(self):
-        return {"secret_key": self.auth.secret_key, 
-            "algorithm": self.auth.algorithm, 
-            "access_token_expire_minutes": self.auth.access_token_expire_minutes
+        return {"secret_key": self.auth.SECRET_KEY, 
+            "algorithm": self.auth.ALGORITHM, 
+            "access_token_expire_minutes": self.auth.ACCESS_TOKEN_EXPIRE_MINUTES
         }
 
 

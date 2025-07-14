@@ -6,6 +6,7 @@ from app.models.applicant import Applicant
 from app.models.user import User
 from app.repositories.applicant_repo import ApplicantRepository
 from app.schemas.applicant import ApplicantCreate, ApplicantEdit, ApplicantFilter, ApplicantRead
+from app.utils.auth import get_password_hash
 
 
 
@@ -20,7 +21,7 @@ class ApplicantService:
             surname=applicant_data.surname,
             phone=applicant_data.phone,
             email=applicant_data.email,
-            hashed_password=applicant_data.hashed_password
+            hashed_password=get_password_hash(applicant_data.hashed_password)
         )
 
         applicant = Applicant(
@@ -38,6 +39,9 @@ class ApplicantService:
         if applicant:
             if applicant_data.user:
                 for field, value in applicant_data.user.model_dump(exclude_unset=True).items():
+                    if field == "hashed_password":
+                        setattr(applicant.user, field, get_password_hash(value))
+                        continue
                     setattr(applicant.user, field, value)
 
             for field, value in applicant_data.model_dump(exclude={"user"}, exclude_unset=True).items():
