@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from app.models.applicant import Applicant
     from app.models.employer import Employer
     from app.models.city import City
+    from app.models.refresh_token import RefreshToken
 
 
 class User(Base):
@@ -23,6 +24,7 @@ class User(Base):
     surname: Mapped[str] = mapped_column(String(40), nullable=False)
 
     user_type: Mapped["UserType"] = relationship("UserType", back_populates="users")
+    refresh_tokens: Mapped[List["RefreshToken"]] = relationship("RefreshToken", back_populates="user")
     city: Mapped["City"] = relationship("City", back_populates="users")
     applicant: Mapped["Applicant | None"] = relationship("Applicant", back_populates="user")
     employer: Mapped["Employer | None"] = relationship("Employer", back_populates="user")
