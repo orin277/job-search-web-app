@@ -9,6 +9,30 @@ class InvalidCredentialsException(HTTPException):
             headers={"WWW-Authenticate": "Bearer"}
         )
 
+class UserNotFoundException(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+
+class InvalidTokenException(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token is invalid",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+
+class TokenExpiredException(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+
 class RefreshTokenAlreadyExistsException(HTTPException):
     def __init__(self):
         super().__init__(

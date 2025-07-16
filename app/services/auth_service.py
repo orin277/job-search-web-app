@@ -1,9 +1,10 @@
-from app.exceptions.auth import InvalidCredentialsException, RefreshTokenAlreadyExistsException
+from app.exceptions.auth import InvalidCredentialsException, RefreshTokenAlreadyExistsException, UserNotFoundException
 from app.exceptions.exceptions import UniqueConstraintException
 from app.models.refresh_token import RefreshToken
 from app.repositories.refresh_token_repo import RefreshTokenRepository
 from app.repositories.user_repo import UserRepository
 from app.schemas.auth import Token
+from app.schemas.user import UserRead
 from app.utils.auth import create_access_token, create_refresh_token, verify_password
 
 
@@ -50,6 +51,12 @@ class AuthService:
             )
         except UniqueConstraintException as e:
             raise RefreshTokenAlreadyExistsException(e.field)
+        
+    async def get_user_by_id(self, id: int) -> UserRead:
+        user = await self.user_repo.get_by_id(id)
+        if user is None:
+            raise UserNotFoundException()
+        return UserRead.model_validate(user)
 
         
 
