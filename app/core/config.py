@@ -34,6 +34,7 @@ class AuthSettings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_TOKEN_EXPIRE_DAYS: int
     
     model_config = SettingsConfigDict(
         env_prefix="AUTH_",
@@ -65,9 +66,9 @@ class Settings(BaseSettings):
     def auth_data(self):
         return {"secret_key": self.auth.SECRET_KEY, 
             "algorithm": self.auth.ALGORITHM, 
-            "access_token_expire_minutes": self.auth.ACCESS_TOKEN_EXPIRE_MINUTES
+            "access_token_expire_minutes": self.auth.ACCESS_TOKEN_EXPIRE_MINUTES,
+            "refresh_token_expire_days": self.auth.AUTH_REFRESH_TOKEN_EXPIRE_DAYS
         }
-
 
 
 

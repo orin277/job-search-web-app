@@ -1,15 +1,16 @@
-
-
-
-from app.exceptions.auth import InvalidCredentialsException
+from app.exceptions.auth import InvalidCredentialsException, RefreshTokenAlreadyExistsException
+from app.exceptions.exceptions import UniqueConstraintException
+from app.models.refresh_token import RefreshToken
+from app.repositories.refresh_token_repo import RefreshTokenRepository
 from app.repositories.user_repo import UserRepository
 from app.schemas.auth import Token
-from app.utils.auth import create_access_token, verify_password
+from app.utils.auth import create_access_token, create_refresh_token, verify_password
 
 
 class AuthService:
-    def __init__(self, user_repo: UserRepository):
+    def __init__(self, user_repo: UserRepository, refresh_token_repo: RefreshTokenRepository):
         self.user_repo = user_repo
+        self.refresh_token_repo = refresh_token_repo
 
     async def authenticate_user(self, email: str, password: str):
         user = await self.user_repo.get_by_email(email)
@@ -19,14 +20,37 @@ class AuthService:
         
         return user
     
-    async def login(self, email, password) -> Token:
-        print(email, password)
+    async def login(
+            self, 
+            email, 
+            password,
+            user_agent,
+            ip_address
+        ) -> Token:
         user = await self.authenticate_user(email, password)
         if user is None:
             raise InvalidCredentialsException()
 
         access_token = create_access_token({"sub": user.id})
+        refresh_token, expiry_date = create_refresh_token({"sub": user.id})
 
-        return Token(
-            access_token=access_token, token_type="bearer"
-        )
+        refresh_token_model = RefreshToken()
+        refresh_token_model.token = refresh_token
+        refresh_token_model.user_id = user.id
+        refresh_token_model.user_agent = user_agent
+        refresh_token_model.ip_address = ip_address
+        refresh_token_model.expires_at = expiry_date.replace(tzinfo=None)
+
+        try:
+            await self.refresh_token_repo.create(refresh_token_model)
+            return Token(
+                access_token=access_token, 
+                refresh_token=refresh_token,
+                token_type="bearer"
+            )
+        except UniqueConstraintException as e:
+            raise RefreshTokenAlreadyExistsException(e.field)
+
+        
+
+        
