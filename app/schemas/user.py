@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class UserRead(BaseModel):
     id: int = Field(gt=0)
-    user_type_id: int = Field(gt=0)
+    user_role_id: int = Field(gt=0)
     city_id: int | None = Field(default=None, gt=0)
     email: str = Field(min_length=5, max_length=80)
     phone: str = Field(min_length=10, max_length=15)

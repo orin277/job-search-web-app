@@ -7,9 +7,9 @@ if TYPE_CHECKING:
     from app.models.user import User
 
 
-class UserType(Base):
-    __tablename__ = "user_types"
+class UserRole(Base):
+    __tablename__ = "user_roles"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
-    users: Mapped[List["User"]] = relationship("User", back_populates="user_type")
+    users: Mapped[List["User"]] = relationship("User", back_populates="user_role")

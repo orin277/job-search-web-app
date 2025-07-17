@@ -1,5 +1,5 @@
 from app.models.user import User
-from app.models.user_type import UserType
+from app.models.user_role import UserRole
 from app.models.applicant import Applicant
 from app.models.country import Country
 from app.models.region import Region
