@@ -26,3 +26,4 @@ from app.models.vacancy_work_location_type import vacancy_work_location_type
 from app.models.vacancy_professional_field import vacancy_professional_field
 from app.models.vacancy_city import vacancy_city
 from app.models.refresh_token import RefreshToken
+from app.models.permission import Permission
