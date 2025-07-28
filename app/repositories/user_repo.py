@@ -8,6 +8,9 @@ from app.exceptions.exceptions import UniqueConstraintException
 from app.models.user import User
 
 class UserRepository(Protocol):
+    async def create_many(self, users: List[User]) -> List[User]:
+        ...
+
     async def get_by_id(self, id: int) -> User | None:
         ...
     
@@ -18,6 +21,20 @@ class UserRepository(Protocol):
 class SqlAlchemyUserRepository:
     def __init__(self, session: Session):
         self.session = session
+
+    async def create_many(self, users: List[User]) -> List[User]:
+        try:
+            for user in users:
+                self.session.add(user)
+            await self.session.commit()
+            for user in users:
+                await self.session.refresh(user)
+            return users
+        except IntegrityError as e:
+            await self.session.rollback()
+            if "UNIQUE" in str(e.orig).upper():
+                raise UniqueConstraintException("email") from e
+            raise
     
     async def get_by_id(self, id: int) -> User | None:
         query = (

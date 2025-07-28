@@ -12,6 +12,9 @@ class ApplicantRepository(Protocol):
     async def create(self, applicant: Applicant) -> Applicant:
         ...
 
+    async def create_many(self, applicants: List[Applicant]) -> List[Applicant]:
+        ...
+
     async def update(self, applicant: Applicant) -> Applicant:
         ...
 
@@ -42,6 +45,20 @@ class SqlAlchemyApplicantRepository:
             await self.session.commit()
             await self.session.refresh(applicant)
             return applicant
+        except IntegrityError as e:
+            await self.session.rollback()
+            if "UNIQUE" in str(e.orig).upper():
+                raise UniqueConstraintException("email") from e
+            raise
+
+    async def create_many(self, applicants: List[Applicant]) -> List[Applicant]:
+        try:
+            for applicant in applicants:
+                self.session.add(applicant)
+            await self.session.commit()
+            for applicant in applicants:
+                await self.session.refresh(applicant)
+            return applicants
         except IntegrityError as e:
             await self.session.rollback()
             if "UNIQUE" in str(e.orig).upper():
