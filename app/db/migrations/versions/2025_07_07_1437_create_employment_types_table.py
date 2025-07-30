@@ -28,6 +28,17 @@ def upgrade() -> None:
     sa.UniqueConstraint('name', name=op.f('uq_employment_types_name'))
     )
     op.create_index(op.f('ix_employment_types_id'), 'employment_types', ['id'], unique=False)
+
+    op.bulk_insert(
+        sa.table(
+            'employment_types',
+            sa.column('name', sa.String),
+        ),
+        [
+            {'name': 'Повна'},
+            {'name': 'Неповна'},
+        ]
+    )
     # ### end Alembic commands ###
 
 
