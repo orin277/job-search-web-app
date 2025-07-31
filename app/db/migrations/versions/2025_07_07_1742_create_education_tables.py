@@ -40,6 +40,19 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id', name=op.f('pk_education'))
     )
     op.create_index(op.f('ix_education_id'), 'education', ['id'], unique=False)
+
+    op.bulk_insert(
+        sa.table(
+            'education_levels',
+            sa.column('name', sa.String),
+        ),
+        [
+            {'name': 'Середня'},
+            {'name': 'Середня спеціальна'},
+            {'name': 'Незакінчена вища'},
+            {'name': 'Вища'},
+        ]
+    )
     # ### end Alembic commands ###
 
 
