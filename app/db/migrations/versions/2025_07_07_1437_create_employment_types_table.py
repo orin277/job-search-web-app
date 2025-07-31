@@ -37,6 +37,8 @@ def upgrade() -> None:
         [
             {'name': 'Повна'},
             {'name': 'Неповна'},
+            {'name': 'Проєктна робота'},
+            {'name': 'Позмінна робота'},
         ]
     )
     # ### end Alembic commands ###
