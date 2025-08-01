@@ -11,6 +11,6 @@ class ResponseStatus(Base):
     __tablename__ = "response_statuses"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(25), unique=True, nullable=False)
 
     responses: Mapped[List["Response"]] = relationship("Response", back_populates="response_status")
