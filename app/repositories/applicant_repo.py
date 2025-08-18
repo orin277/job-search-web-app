@@ -95,7 +95,7 @@ class SqlAlchemyApplicantRepository:
             select(Applicant)
             .join(User)
             .options(contains_eager(Applicant.user)
-                     .load_only(User.id, User.user_type_id, User.name, 
+                     .load_only(User.id, User.user_role_id, User.name, 
                                 User.surname, User.city_id, User.email, User.phone)
                      )
             )

@@ -16,7 +16,7 @@ class ApplicantService:
 
     async def create(self, applicant_data: ApplicantCreate) -> ApplicantRead:
         user = User(
-            user_type_id=2,
+            user_role_id=2,
             name=applicant_data.name,
             surname=applicant_data.surname,
             phone=applicant_data.phone,
