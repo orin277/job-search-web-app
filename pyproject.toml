@@ -23,6 +23,7 @@ dependencies = [
     "faker (>=37.4.2,<38.0.0)",
 ]
 
+[tool.poetry]
 packages = [
     { include = "app" }
 ]
